@@ -1,0 +1,136 @@
+Include Irvine32.inc
+.data
+
+value1 Dword ?
+value2 Dword ?
+dif Dword ?
+
+msg1 Byte "  ============== Welcome to Guess The Number Game ============== ",0dh,0ah,0
+msg2 byte "  Instructions: ",0dh,0ah
+     byte "   -> Enter a range in which you want to play, ",0dh,0ah
+     byte "   -> After Entering the range, A Random Number will be generated. ",0dh,0ah
+     byte "   -> Now you have to guess the number in given Trials, ",0dh,0ah
+     byte "  ====< Good Luck! >==== ",0dh,0ah,0
+msg3 Byte "  Enter the Range in which you want to play.",0dh,0ah,0
+msg4 Byte "  A Number is generated, Now Guess The Number",0dh,0ah,0
+msg5 Byte "  Enter Value : ",0
+msg6 Byte "  You have Entered a Wrong Value, TRY AGAIN ! ",0dh,0ah,0
+msg7 Byte "  Congratulations, You Entered the Correct Value.  ",0dh,0ah
+     Byte "  YOU WON ! ",0
+msg8 Byte "  YOU LOST ! ",0
+msg9 Byte "  Select Difficulty Mode: ",0dh,0ah
+     Byte "   -> Press 1 for Easy (3 Trials).",0dh,0ah
+     Byte "   -> Press 2 for Medium (2 Trials).",0dh,0ah
+     Byte "   -> Press 3 for Hard (1 Trial).",0dh,0ah,0
+msg10 Byte "  Invalid Command, Try again. ",0
+msg11 Byte "  The Number Was : ",0
+msg12 Byte "   Coal Proejct .  .  .  ",0dh,0ah
+      Byte "   Created By KASHIF HUSSAIN 10682, ",0dh,0ah
+      Byte "   Raja Hassan Ali 10689 and Usama Zulfiqar 10686 ",0dh,0ah
+      Byte "   Thank You for Playing !  ",0dh,0ah,0
+
+
+.code
+main proc
+;Kashif Husssain 10682
+
+
+mov edx, offset msg1
+call writestring
+call crlf
+
+mov edx, offset msg2
+call writestring
+call crlf
+
+Diff_Level:                      ;Difficulty Level Block
+
+mov edx, offset msg9
+call writestring
+call crlf
+call readint                     ;Input of difficulty level
+cmp eax,1                        ;Comparision of input 
+je Easy                          ;Jump if equals to Easy 
+cmp eax,2
+je Medium                        ;Jump if equals to Medium 
+cmp eax,3
+je Hard                          ;Jump if equals to Hard
+
+mov edx, offset msg10
+call writestring                 ;Invalid Input of Difficulty level's error msg
+call crlf
+jmp Diff_Level                   ;Jump and ask to Try again, goto Diff Level block if invalid input
+
+
+
+Easy:
+mov dif,3
+jmp Rangeinput
+
+
+Medium: 
+mov dif,2
+jmp Rangeinput
+
+Hard: 
+mov dif,1
+
+
+Rangeinput:
+
+mov edx, offset msg3
+call writestring
+
+call readint                          ;Input of Range 
+call RandomRange                      ;Generates Random value 
+mov value1,eax                        ;Moves Random value to memory
+call crlf
+
+mov edx, offset msg4
+call writestring
+
+
+
+mov ecx,0
+.while ecx < dif                      ;Input of Guesses A/C to Diff level
+mov edx, offset msg5
+call writestring
+call readint 
+cmp eax,value1
+je Win                                ;Jump if value is equal to memory number
+mov edx, offset msg6
+call writestring
+inc ecx
+call crlf
+.endw
+
+call crlf
+mov edx, offset msg8
+call writestring 
+jmp Endingmsg
+
+
+Win:
+mov edx, offset msg7
+call writestring
+jmp Endingmsg
+
+
+
+Endingmsg:
+call crlf
+call crlf
+mov edx,offset msg11
+call writestring                    
+mov eax,value1                         ;Tells the Random value at the end of Game
+call Writedec
+call crlf
+call crlf
+mov edx,offset msg12
+call writestring 
+call crlf
+call crlf
+
+
+main endp
+end main
